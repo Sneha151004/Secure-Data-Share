@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>Shared Data View</h3>
+        </div>
+        <div class="card-body">
+            <!-- Data Information -->
+            <div class="mb-4">
+                <h4>File Information</h4>
+                <p><strong>Filename:</strong> {{ data_record.filename }}</p>
+                <p><strong>Shared By:</strong> {{ data_record.owner.username }}</p>
+                <p><strong>Share Date:</strong> {{ share.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                {% if share.expiry_date %}
+                <p><strong>Expires On:</strong> {{ share.expiry_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Privacy Settings -->
+            <div class="mb-4">
+                <h4>Privacy Settings</h4>
+                <div class="alert alert-info">
+                    <p><strong>Privacy Level (ε):</strong> {{ privacy_settings.epsilon }}</p>
+                    <p><strong>Noise Level:</strong> {{ privacy_settings.noise_level }}</p>
+                    <p class="mb-0"><small>This data is protected using differential privacy techniques to ensure individual privacy while maintaining statistical utility.</small></p>
+                </div>
+            </div>
+
+            <!-- Data Preview -->
+            <div class="mb-4">
+                <h4>Data Preview</h4>
+                <div class="table-responsive">
+                    {% if preview_data %}
+                        {{ preview_data | safe }}
+                    {% else %}
+                        <div class="alert alert-warning">
+                            No preview data available or data format not supported.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Download Button -->
+            <div class="text-center">
+                <a href="{{ url_for('main.download_shared', share_id=share.id) }}" class="btn btn-primary">
+                    Download Privacy-Protected Data
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

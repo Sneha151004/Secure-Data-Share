@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Security Settings</h2>
+    
+    <!-- Encryption Settings -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>File Encryption Settings</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="defaultEncryption" 
+                       {% if current_user.default_encryption_enabled %}checked{% endif %}>
+                <label class="form-check-label" for="defaultEncryption">
+                    Enable encryption by default for new uploads
+                </label>
+            </div>
+            <div id="encryptionMessage" class="alert mt-2" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- 2FA Settings -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Two-Factor Authentication</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="enable2FA"
+                       {% if current_user.two_factor_enabled %}checked{% endif %}>
+                <label class="form-check-label" for="enable2FA">
+                    Enable Two-Factor Authentication
+                </label>
+            </div>
+            
+            <div id="2faSettings" {% if not current_user.two_factor_enabled %}style="display: none;"{% endif %}>
+                <div class="mb-3">
+                    <label class="form-label">Phone Number</label>
+                    <div class="input-group">
+                        <input type="tel" class="form-control" id="phoneNumber" 
+                               value="{{ current_user.phone_number or '' }}"
+                               placeholder="Enter your phone number">
+                        <button class="btn btn-primary" type="button" id="savePhoneNumber">
+                            Save
+                        </button>
+                    </div>
+                    <div class="form-text">Enter your phone number in international format (e.g., +1234567890)</div>
+                </div>
+                <div id="phoneMessage" class="alert" style="display: none;"></div>
+            </div>
+            <div id="2faMessage" class="alert mt-2" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Modal -->
+<div class="modal fade" id="encryptionProgressModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Encrypting File</h5>
+            </div>
+            <div class="modal-body">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                         role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+And finally, let's update the JavaScript 

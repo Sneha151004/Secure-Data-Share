@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Data - Secure Data Share{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Upload Data</h2>
+                    <form method="POST" enctype="multipart/form-data" action="{{ url_for('main.upload') }}">
+                        <!-- File Upload -->
+                        <div class="mb-4">
+                            <label for="file" class="form-label">Choose File</label>
+                            <input type="file" class="form-control" id="file" name="file" 
+                                   accept=".csv,.json" required>
+                            <div class="form-text">
+                                Supported formats: CSV, JSON (Max size: 16MB)
+                            </div>
+                        </div>
+
+                        <!-- Data Type -->
+                        <div class="mb-4">
+                            <label for="data_type" class="form-label">Data Type</label>
+                            <select class="form-select" id="data_type" name="data_type" required>
+                                <option value="" selected disabled>Select data type...</option>
+                                <option value="medical">Medical Data</option>
+                                <option value="financial">Financial Data</option>
+                            </select>
+                        </div>
+
+                        <!-- Privacy Settings -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                Privacy Settings
+                            </div>
+                            <div class="card-body">
+                                <!-- Epsilon Value -->
+                                <div class="mb-3">
+                                    <label for="epsilon" class="form-label">
+                                        Privacy Budget (ε)
+                                        <i class="fas fa-info-circle" data-bs-toggle="tooltip" 
+                                           title="Lower values provide stronger privacy but may reduce accuracy"></i>
+                                    </label>
+                                    <input type="range" class="form-range" id="epsilon" name="epsilon"
+                                           min="0.1" max="2.0" step="0.1" value="1.0">
+                                    <div class="row text-muted small">
+                                        <div class="col">More Private</div>
+                                        <div class="col text-end">More Accurate</div>
+                                    </div>
+                                    <div class="text-center" id="epsilonValue">ε = 1.0</div>
+                                </div>
+
+                                <!-- Noise Level -->
+                                <div class="mb-3">
+                                    <label for="noise_level" class="form-label">
+                                        Noise Level
+                                        <i class="fas fa-info-circle" data-bs-toggle="tooltip" 
+                                           title="Amount of random noise added to protect privacy"></i>
+                                    </label>
+                                    <select class="form-select" id="noise_level" name="noise_level">
+                                        <option value="0.1">Low (0.1)</option>
+                                        <option value="0.2">Medium (0.2)</option>
+                                        <option value="0.3">High (0.3)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> Upload Data
+                            </button>
+                            <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+<script>
+// Initialize tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+
+// Update epsilon value display
+document.getElementById('epsilon').addEventListener('input', function() {
+    document.getElementById('epsilonValue').textContent = 'ε = ' + this.value;
+});
+
+// File type validation
+document.getElementById('file').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const extension = file.name.split('.').pop().toLowerCase();
+        if (!['csv', 'json'].includes(extension)) {
+            alert('Please select a CSV or JSON file');
+            this.value = '';
+        }
+    }
+});
+</script>
+{% endblock %}

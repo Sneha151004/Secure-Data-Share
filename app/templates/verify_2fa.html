@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Two-Factor Authentication</h4>
+                </div>
+                <div class="card-body">
+                    {% if verification_code %}
+                    <div class="alert alert-info">
+                        For testing purposes, your verification code is: <strong>{{ verification_code }}</strong>
+                    </div>
+                    {% endif %}
+                    
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Enter Verification Code</label>
+                            <input type="text" name="code" class="form-control" required>
+                            {% if phone_number %}
+                            <div class="form-text">
+                                Enter the verification code for phone number ending in ***{{ phone_number[-4:] }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Verify</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

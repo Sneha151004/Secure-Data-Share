@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Share Data - Secure Data Share{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Share: {{ record.filename }}</h2>
+            <div class="text-muted">
+                <span class="badge bg-{{ 'primary' if record.file_type == 'csv' else 'success' }}">
+                    {{ record.file_type.upper() }}
+                </span>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('main.view_data', record_id=record.id) }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Data View
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- User Share Form -->
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-plus"></i> Share with User</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <!-- Username Input -->
+                        <div class="mb-4">
+                            <label for="username" class="form-label">Share with Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required
+                                   placeholder="Enter username to share with">
+                            <div class="form-text">Enter the username of the person you want to share this data with.</div>
+                        </div>
+
+                        <!-- Privacy Settings -->
+                        <div class="mb-4">
+                            <h5>Privacy Settings</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="epsilon" class="form-label">Privacy Budget (ε)</label>
+                                    <input type="number" class="form-control" id="epsilon" name="epsilon"
+                                           value="{{ record.epsilon }}" min="0.1" max="10" step="0.1">
+                                    <div class="form-text">Lower values provide more privacy but less accuracy.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="noise_level" class="form-label">Noise Level</label>
+                                    <input type="number" class="form-control" id="noise_level" name="noise_level"
+                                           value="{{ record.noise_level }}" min="0" max="1" step="0.1">
+                                    <div class="form-text">Higher values add more noise to protect privacy.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-share"></i> Share with User
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Public Link Share Form -->
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-link"></i> Create Share Link</h5>
+                </div>
+                <div class="card-body">
+                    <form id="publicShareForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address (Optional)</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   placeholder="Enter recipient's email">
+                            <div class="form-text">If provided, we'll send the share link to this email.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="download_limit" class="form-label">Download Limit</label>
+                            <input type="number" class="form-control" id="download_limit" name="download_limit"
+                                   min="1" placeholder="Leave empty for unlimited">
+                            <div class="form-text">Maximum number of times the file can be downloaded.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="expiry_days" class="form-label">Link Expiry (Days)</label>
+                            <input type="number" class="form-control" id="expiry_days" name="expiry_days"
+                                   min="1" placeholder="Leave empty for no expiry">
+                            <div class="form-text">Number of days before the link expires.</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-link"></i> Generate Share Link
+                        </button>
+                    </form>
+
+                    <div id="shareLink" class="mt-3 d-none">
+                        <hr>
+                        <h6>Share Link Generated:</h6>
+                        <div class="input-group">
+                            <input type="text" id="shareLinkInput" class="form-control" readonly>
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyShareLink()">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+document.getElementById('publicShareForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    
+    fetch("{{ url_for('main.create_public_share', record_id=record.id) }}", {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            document.getElementById('shareLinkInput').value = data.share_link;
+            document.getElementById('shareLink').classList.remove('d-none');
+        }
+    });
+});
+
+function copyShareLink() {
+    const linkInput = document.getElementById('shareLinkInput');
+    linkInput.select();
+    document.execCommand('copy');
+    alert('Link copied to clipboard!');
+}
+</script>
+{% endblock %}
+{% endblock %}

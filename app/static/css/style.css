@@ -1,0 +1,192 @@
+/* Global Styles */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --background-color: #f8f9fa;
+    --text-color: #2c3e50;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navigation */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    font-weight: 600;
+}
+
+/* Forms */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+    transform: translateY(-1px);
+}
+
+/* Tables */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Badges */
+.badge {
+    padding: 0.5em 1em;
+    font-weight: 500;
+}
+
+/* Progress bars */
+.progress {
+    background-color: #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+}
+
+/* Alerts */
+.alert {
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.alert-dismissible .btn-close {
+    padding: 1.25rem;
+}
+
+/* File upload */
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.custom-file-input::before {
+    content: 'Select file';
+    display: inline-block;
+    background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 8px 12px;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Footer */
+.footer {
+    margin-top: auto;
+    padding: 1.5rem 0;
+    background-color: white;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .table-responsive {
+        border: none;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #1a1a1a;
+        --text-color: #ffffff;
+    }
+    
+    .card, .navbar, .footer {
+        background-color: #2d2d2d;
+    }
+    
+    .card-header {
+        background-color: #2d2d2d;
+        border-bottom-color: #404040;
+    }
+    
+    .table thead th {
+        background-color: #2d2d2d;
+    }
+    
+    .form-control, .form-select {
+        background-color: #333;
+        border-color: #404040;
+        color: white;
+    }
+}
